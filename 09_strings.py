@@ -17,6 +17,9 @@ print(name.count('a'))
 #count of given char in sub-string
 print(name.count('a', 0, 5))
 
-
+#palindrome
+str1 = input("Enter the String: ")
+str2 = str1[::-1]
+print(str1, " ", str2)
 
 
