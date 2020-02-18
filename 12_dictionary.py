@@ -27,3 +27,22 @@ friends = ['amar', 'akbar', 'anthony', 'tiger']
 #somedict = {'amar':4, 'akbar':5, 'anthony':6, 'tiger':5}
 somedict = {value:len(value) for value in friends}
 print(somedict)
+
+#use of update to merge dictionaries
+#key values must be unique in each dictionary
+weekdays = {1:"monday", 2:"tuesday", 3:"wednesday"}
+month = {10:"jan", 12:"feb", 13:"march"}
+friends ={"Chennai": "Omkar", "Pune": "Dnyanmote"}
+some = {}
+some.update(weekdays)
+some.update(month)
+some.update(friends)
+print(weekdays)
+print(month)
+print(friends)
+print(some)
+
+#use unpacking operator to merge dictionaries -> **
+allUnpacked = {}
+allUnpacked = {**weekdays, **month, **friends}
+print(allUnpacked)
