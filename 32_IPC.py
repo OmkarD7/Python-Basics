@@ -15,6 +15,7 @@ def getSqaure(numList,ress):
 if __name__ == '__main__':
     numbers = [1,2,3,4,5]
     #datatype and size
+    #data to be shared between different processes
     result = multiprocessing.Array('i', 5)
     print("Result List in Main Process Before: ", list(result))
     process1 = multiprocessing.Process(target=getSqaure, args=(numbers,result))
