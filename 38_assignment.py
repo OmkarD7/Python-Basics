@@ -9,6 +9,7 @@ cellRow = 0
 cellCol = 0
 worksheet.write(cellRow, cellCol, "Heading")
 worksheet.write(cellRow, cellCol + 1, "Author")
+worksheet.write(cellRow, cellCol + 2, "Area")
 areas = ["africa", "americas", "asia", "australia", "canada", "europe", "middleeast"]
 
 for a in areas:
@@ -18,20 +19,23 @@ for a in areas:
     page = uclient.read()
     uclient.close()
     pagesoup = soup(page, 'html.parser')
+    newsAreas = pagesoup.find("h1", {"class":"css-1qq4zod e1bbdwbz0"})
     allNewsHeading = pagesoup.findAll("h2", {"class":"css-1j9dxys e1xfvim30"})
-    #allNewsDate = pagesoup.findAll("div", {"class":"css-n1vcs8 e1xfvim33"})
+    allNewsDate = pagesoup.findAll("div",{"class":"css-n1vcs8 e1xfvim33"})
     allNewsAuthor = pagesoup.findAll("span", {"class":"css-1n7hynb"})
-    #print(allNewsDate)
     counter = 0
-    while counter < 5:
+    eachnewsarea = newsAreas
+    while counter < 3:
         eachheading = allNewsHeading[counter]
         #eachdate = allNewsDate[counter]
         eachauthor = allNewsAuthor[counter]
         print("Heading: " + str(eachheading.text))
         print("Author: " + str(eachauthor.text))
+        print("Area: "+ str(eachnewsarea.text))
         #print("Date: " + str(eachdate.))
         worksheet.write(cellRow, cellCol, eachheading.text)
         worksheet.write(cellRow, cellCol + 1, eachauthor.text)
+        worksheet.write(cellRow, cellCol + 2, eachnewsarea.text)
         cellRow += 1
         counter += 1
     time.sleep(1)
