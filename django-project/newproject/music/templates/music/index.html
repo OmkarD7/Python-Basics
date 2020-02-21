@@ -1,0 +1,12 @@
+
+<h1>Welcome to Music App!</h1>
+<h2>Our latest Albums</h2>
+<ol>
+    {% for album in allAlbums %}
+<li>
+    <a href={{album.id}}>
+        {{ album.album_title }}
+    </a>
+</li>
+    {% endfor %}
+</ol>
