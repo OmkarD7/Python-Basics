@@ -8,7 +8,7 @@ class Album(models.Model):
     genre = models.CharField(max_length=256)
     album_logo = models.CharField(max_length=1024)
     def __str__(self):
-        return self.artist + ", " + self.album_title + ", " + self.genre
+        return self.album_title
 class Song(models.Model):
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
     file_type = models.CharField(max_length=4)
