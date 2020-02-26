@@ -36,10 +36,10 @@ def data_handling(threadName, file_name):
 
 try:
     thread1 = threading.Thread(target=data_handling, args=("Thread1", "Account_Details.csv"))
-    thread2 = threading.Thread(target=data_handling, args=("Thread2", "Account_Details.csv"))
-    thread3 = threading.Thread(target=data_handling, args=("Thread2", "Account_Details.csv"))
-    thread4 = threading.Thread(target=data_handling, args=("Thread2", "Account_Details.csv"))
-    thread5 = threading.Thread(target=data_handling, args=("Thread2", "Account_Details.csv"))
+    thread2 = threading.Thread(target=data_handling, args=("Thread2", "Account_Details(1).csv"))
+    thread3 = threading.Thread(target=data_handling, args=("Thread2", "Account_Details(2).csv"))
+    thread4 = threading.Thread(target=data_handling, args=("Thread2", "Account_Details(3).csv"))
+    thread5 = threading.Thread(target=data_handling, args=("Thread2", "Account_Details(4).csv"))
 
 except:
    print ("Error: unable to start thread")
