@@ -1,8 +1,10 @@
 import pandas as pd
 import mysql.connector
 import threading
+import concurrent.futures
+import logging
 
-def data_handling(threadName, file_name):
+def data_handling(file_name):
     #create dataframe
     df = pd.read_csv(file_name)
     insertData = df[['ACCOUNT_ID','ACCOUNT_NAME']]   [df['MODE']=='I']
@@ -16,42 +18,39 @@ def data_handling(threadName, file_name):
         try:
             mycursor.execute(insertQuery, tuple(row))
             print("Record Inserted Successfully.")
-        except:
-            print("SQL insertion Error: Account already exists.")
+        except mysql.connector.Error as Err:
+            print("insertion Error: ", Err)
+            #print(row)
     #for updating data
     for i ,row in updateData.iterrows():
         updateQuery = "UPDATE `account_detail` SET ACCOUNT_NAME = %s WHERE ACCOUNT_ID = %s"
         try:
             mycursor.execute(updateQuery, tuple(row))
             print("Record Updated Successfully")
-        except:
-            print("Syntax Error: ID not found.") 
+        except mysql.connector.Error as Err:
+            print("update error: ", Err) 
+            #print(row)
     #for deleting data
     for i, row in deleteData.iterrows():
         deleteQuery = "DELETE FROM `account_detail` WHERE ACCOUNT_ID = %s"
-        mycursor.execute(deleteQuery, tuple(row))
+        try:
+            mycursor.execute(deleteQuery, tuple(row))
+            print("Record deleted")
+        except mysql.connector.Error as Err:
+            print("deletation error: ", Err)
+            #print(row)
     # the connection is not autocommitted by default, so we must commit to save our changes
     myconn.commit()
 
-
-try:
-    thread1 = threading.Thread(target=data_handling, args=("Thread1", "Account_Details.csv"))
-    thread2 = threading.Thread(target=data_handling, args=("Thread2", "Account_Details(1).csv"))
-    thread3 = threading.Thread(target=data_handling, args=("Thread2", "Account_Details(2).csv"))
-    thread4 = threading.Thread(target=data_handling, args=("Thread2", "Account_Details(3).csv"))
-    thread5 = threading.Thread(target=data_handling, args=("Thread2", "Account_Details(4).csv"))
-
-except:
-   print ("Error: unable to start thread")
-
-thread1.start()
-thread2.start()
-thread3.start()
-thread4.start()
-thread5.start()
-
-thread1.join()
-thread2.join()
-thread3.join()
-thread4.join()
-thread5.join()
+if __name__ == "__main__":
+    threads = []
+    for i in range(5):
+        file_name = "Account_Details("+str(i)+").csv"
+        try:
+            t = threading.Thread(target=data_handling, args=(file_name,))
+        except threading.ThreadError as ThreadEr:
+            print("Error: unable to start thread", ThreadEr)
+        threads.append(t)
+        t.start()
+    for thread in threads:
+        thread.join()

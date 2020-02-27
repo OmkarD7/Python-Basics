@@ -16,19 +16,16 @@ def data_handling(file_name):
         try: 
             mycursor.execute(insertQuery, tuple(row))
             print("Record Inserted Successfully.")
-        except:
-            print("Error while inserting data into database")
-        expt = mycursor.rowcount
-        if expt == 0:
-            raise TypeError("Invalid Data format")
+        except Exception as Error:
+            print("Error while inserting data:", Error)
     #for updating data
     for i ,row in updateData.iterrows():
         updateQuery = "UPDATE `resource_detail` SET RESOURCE_NAME = %s, TECHNOLOGY = %s, DOJ = %s WHERE RESOURCE_ID = %s"
-        mycursor.execute(updateQuery, tuple(row))
-        #print("Record Updated Successfully")
-        expt = mycursor.rowcount
-        if expt == 0:
-            raise TypeError("Failed to update record") 
+        try:
+            mycursor.execute(updateQuery, tuple(row))
+            print("Record Updated Successfully")
+        except Exception as Error:
+            print("Error while updating data:"+str(Error))
     #for deleting data
     for i, row in deleteData.iterrows():
         deleteQuery = "DELETE FROM `resource_detail` WHERE RESOURCE_ID = %s" 
@@ -38,25 +35,17 @@ def data_handling(file_name):
     myconn.commit()
     
 if __name__ == "__main__":
-    try:
-        thread1 = threading.Thread(target=data_handling, args=("Resource_Details.csv",))
-        thread2 = threading.Thread(target=data_handling, args=("Resource_Details(1).csv",))
-        thread3 = threading.Thread(target=data_handling, args=("Resource_Details(2).csv",))
-        thread4 = threading.Thread(target=data_handling, args=("Resource_Details(3).csv",))
-        thread5 = threading.Thread(target=data_handling, args=("Resource_Details(4).csv",))
-    except:
-        print ("Error: unable to start thread")
+    threads = []
+    for i in range(5):
+        file_name = "Resource_Details("+str(i)+").csv"
+        try:
+            t = threading.Thread(target=data_handling, args=(file_name,))
+        except threading.ThreadError as ThreadErr:
+            print("unable to start the thread as:",ThreadErr)
+        threads.append(t)
+        t.start()
+    for thread in threads:
+        thread.join()
 
-    thread1.start()
-    thread2.start()
-    thread3.start()
-    thread4.start()
-    thread5.start()
-
-    thread1.join()
-    thread2.join()
-    thread3.join()
-    thread4.join()
-    thread5.join()
 
     
